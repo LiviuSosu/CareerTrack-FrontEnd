@@ -1,3 +1,8 @@
 export const DATA_REQUESTED = "DATA_REQUESTED";
 export const FOUND_BAD_WORD = "FOUND_BAD_WORD";
 export const DATA_LOADED = "DATA_LOADED";
+export const API_ERRORED = "API_ERRORED";
+
+export const LOGIN_REQUESTED = "LOGIN_REQUESTED";
+export const LOGIN_SUCCEDED = "LOGIN_SUCCEDED";
+export const LOGIN_FAILED = "LOGIN_FAILED";
