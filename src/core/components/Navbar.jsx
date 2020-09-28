@@ -8,7 +8,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { history } from '../../helpers/index';
 import { PrivateRoute } from '../components/PrivateRoute';
 import { Articles } from '../components/Articles';
-import { LoginModel } from "../../Models/Users/LoginModel"
+import { LoginModel } from "../../Models/Users/LoginModel";
+import {authenticationService} from '../../sagas/api-saga'
 
 export class Navbar extends Component {
   componentDidMount() {
@@ -16,18 +17,23 @@ export class Navbar extends Component {
     var loginDto = new LoginModel("LiviuS","SomePassword123!");
     this.props.loginUser("http://localhost:1400/api/Users/login", loginDto);
 
+    authenticationService.currentUser.subscribe(x => this.setState({
+      currentUser: x
+  }));
   }
 
   constructor(props) {
     super(props);
     this.state = {
       currentUser: null,
-      isAdmin: false
+      isAdmin: false,
+      loginResponse: null
     };
   }
 
   render() {
-    const { currentUser, isAdmin } = this.state;
+    const { currentUser, isAdmin, loginResponse } = this.state;
+
     return (
       <Router history={history}>
       <div>
@@ -35,6 +41,7 @@ export class Navbar extends Component {
               <nav className="navbar navbar-expand navbar-dark bg-dark">
                   <div className="navbar-nav">
                       <Link to="/" className="nav-item nav-link">Articles</Link>
+                      <Link to="/login" className="nav-item nav-link">Login</Link>
                       {/* {isAdmin && <Link to="/admin" className="nav-item nav-link">Admin</Link>}
                       <a onClick={this.logout} className="nav-item nav-link">Logout</a> */}
                   </div>
@@ -45,6 +52,7 @@ export class Navbar extends Component {
                   <div className="row">
                       <div className="col-md-6 offset-md-3">
                           <PrivateRoute exact path="/" component={Articles} />
+                          <Route  path="/login" component={Login} /> 
                           {/* <PrivateRoute path="/admin" roles={[Role.Admin]} component={AdminPage} />
                           <Route path="/login" component={LoginPage} /> */}
                       </div>
@@ -88,7 +96,7 @@ function mapStateToProps(state) {
     console.log(state);
   return {
     articles: state.remoteArticles.slice(0, 100),
-  
+     loginResponse: state.loginResponse
   };
 }
 
