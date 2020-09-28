@@ -1,5 +1,7 @@
 import { takeEvery, call, put } from "redux-saga/effects";
 import * as constants from '../constants/action-types'
+import { BehaviorSubject } from 'rxjs';
+import * as helpers from '../helpers';
 
 export default function* watcherSaga() {
   yield takeEvery(constants.DATA_REQUESTED, workerSaga);
@@ -30,6 +32,27 @@ function* userLoginSaga(action) {
   }
 }
 
+const currentUserSubject = new BehaviorSubject(
+  
+  localStorage.getItem('currentUser')
+  
+  );
+export const authenticationService = {
+  currentUser: currentUserSubject.asObservable(),
+  get currentUserValue () { return currentUserSubject.value }
+};
+
 function userLogin(url, LoginModel) {
-  return fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(LoginModel), }).then(response => response.json());
+  return fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(LoginModel)})
+   .then(helpers.handleResponse)
+          .then(
+            user => {
+              // store user details and jwt token in local storage to keep user logged in between page refreshes
+              localStorage.setItem('currentUser', JSON.stringify(user));
+              currentUserSubject.next(user);
+  
+              return user;
+          });
+            // response =>response.json()
+            
 }
