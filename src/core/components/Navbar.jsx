@@ -2,25 +2,19 @@ import React, { Component } from 'react';
 import { connect } from "react-redux";
 import { Router, Route, Link } from 'react-router-dom';
 import { getData } from "../../actions/index";
+import { Articles } from './Articles/Articles';
+import { HomePage } from './HomePage/HomePage';
 import { loginUser } from "../../actions/users";
 import { Login } from './Login';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { history } from '../../helpers/index';
+import { history, Role } from '../../helpers/index';
 import { PrivateRoute } from '../components/PrivateRoute';
-import { Articles } from '../components/Articles';
 import { LoginModel } from "../../Models/Users/LoginModel";
-import {authenticationService} from '../../sagas/api-saga'
+import {authenticationService} from '../../sagas/api-saga';
+import jwt_decode from "jwt-decode";
+import { withRouter } from 'react-router-dom';
 
-export class Navbar extends Component {
-  componentDidMount() {
-    this.props.getData("https://api.valentinog.com/api/link/");
-    var loginDto = new LoginModel("LiviuS","SomePassword123!");
-    this.props.loginUser("http://localhost:1400/api/Users/login", loginDto);
-
-    authenticationService.currentUser.subscribe(x => this.setState({
-      currentUser: x
-  }));
-  }
+class Navbar extends React.Component {
 
   constructor(props) {
     super(props);
@@ -31,61 +25,46 @@ export class Navbar extends Component {
     };
   }
 
+  componentDidMount() {
+    authenticationService.currentUser.subscribe(x => this.setState({
+        currentUser: x,
+        isAdmin: x && x.role === Role.Admin
+    }));
+  }
+
+  logout() {
+    authenticationService.logout();
+    history.push('/login');
+  }
+
   render() {
     const { currentUser, isAdmin, loginResponse } = this.state;
 
     return (
-      <Router history={history}>
-      <div>
-          {currentUser &&
-              <nav className="navbar navbar-expand navbar-dark bg-dark">
-                  <div className="navbar-nav">
-                      <Link to="/" className="nav-item nav-link">Articles</Link>
-                      <Link to="/login" className="nav-item nav-link">Login</Link>
-                      {/* {isAdmin && <Link to="/admin" className="nav-item nav-link">Admin</Link>}
-                      <a onClick={this.logout} className="nav-item nav-link">Logout</a> */}
-                  </div>
-              </nav>
+      // <Router history={history}>
+        <div>
+          {
+            currentUser &&
+            <nav className="navbar navbar-expand navbar-dark bg-dark">
+              <div className="navbar-nav">
+                <Link to="/" className="nav-item nav-link">Home</Link>
+                <Link to="/Articles" className="nav-item nav-link">Articles</Link>
+                <Link to="/Login" className="nav-item nav-link">Login</Link>
+              </div>
+            </nav>
           }
           <div className="jumbotron">
-              <div className="container">
-                  <div className="row">
-                      <div className="col-md-6 offset-md-3">
-                          <PrivateRoute exact path="/" component={Articles} />
-                          <Route  path="/login" component={Login} /> 
-                          {/* <PrivateRoute path="/admin" roles={[Role.Admin]} component={AdminPage} />
-                          <Route path="/login" component={LoginPage} /> */}
-                      </div>
-                  </div>
+            <div className="container">
+              <div className="row">
+                <div className="col-md-6 offset-md-3">
+                  <Route exact path="/" component={HomePage} />
+                  <PrivateRoute path="/Articles" component={Articles} />
+                  <Route path="/Login" component={Login} />
+                </div>
               </div>
+            </div>
           </div>
-      </div>
-  </Router>
-      // <Router history={history}>
-      //   <div>
-      //               {currentUser &&
-      //                  <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      //                       <div className="collapse navbar-collapse" id="navbarSupportedContent">
-      //                       <ul class="navbar-nav mr-auto">
-      //                       <li class="nav-item">
-      //                           <Link to="/" className="nav-item nav-link">Articles</Link>
-      //                           </li>
-      //                       </ul>
-      //                       </div>
-      //                   </nav>
-      //               }
-      //               <div className="navbar navbar-expand-lg navbar-light bg-light">
-      //                   <div className="container">
-      //                       <div className="collapse navbar-collapse" id="navbarSupportedContent">
-      //                       <ul class="navbar-nav mr-auto">
-      //                         <li>
-      //                               <PrivateRoute exact path="/" component={Articles} />
-      //                               </li>
-      //                           </ul>
-      //                       </div>
-      //                   </div>
-      //               </div>
-      //           </div>
+        </div>
       // </Router>
     );
   }
@@ -93,51 +72,18 @@ export class Navbar extends Component {
 
 
 function mapStateToProps(state) {
-    console.log(state);
+    var token = state.loginResponse.token;
+    if(token!==undefined)
+    {
+      var decoded = jwt_decode(token); 
+      if(decoded.roles==="Admin"){
+        state.isAdmin = true;
+      } 
+    }
+
   return {
-    articles: state.remoteArticles.slice(0, 100),
      loginResponse: state.loginResponse
   };
 }
 
-export default connect(mapStateToProps, { getData, loginUser })(Navbar);
-
-// function Navbar() {
-
-
-
-//     return (
-//         <p>this is a Navbar</p>
-//     );
-// }
-
-// export default Navbar;
-
-// import React, { Component } from 'react';
-// import { connect } from "react-redux";
-// import { getData } from "../../actions/index";
-
-// export class Navbar extends Component {
-//     componentDidMount() {
-//         this.props.getData("https://api.valentinog.com/api/link/");
-//       }
-
-//       render() {
-//         return (
-//           <ul>
-//             {this.props.articles.map(el => (
-//               <li key={el.id}>{el.title}</li>
-//             ))}
-//           </ul>
-//         );
-//       }
-// }
-
-
-// function mapStateToProps(state) {
-//     return {
-//       articles: state.remoteArticles.slice(0, 100)
-//     };
-//   }
-
-// export default connect(mapStateToProps, { getData })(Navbar);
+export default withRouter(connect(mapStateToProps, { getData, loginUser })(Navbar));
