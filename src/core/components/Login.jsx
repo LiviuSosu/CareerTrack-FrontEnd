@@ -3,9 +3,17 @@ import React, { Component } from 'react';
 export class Login extends Component {
     render() {
         return (
-            <div>
-<p>This is teh login component</p>
-            </div>
+            <form>
+            <label>
+              Name:
+              <input type="text" name="name" />
+            </label>
+            <label>
+              Password:
+              <input type="text" name="name" />
+            </label>
+            <input type="submit" value="Submit" />
+          </form>
 
         );
       }

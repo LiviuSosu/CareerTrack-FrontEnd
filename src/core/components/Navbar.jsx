@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { connect } from "react-redux";
-import { Router, Route, Link } from 'react-router-dom';
+import { Route, Link } from 'react-router-dom';
 import { getData } from "../../actions/index";
 import { Articles } from './Articles/Articles';
 import { HomePage } from './HomePage/HomePage';
@@ -9,7 +9,6 @@ import { Login } from './Login';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { history, Role } from '../../helpers/index';
 import { PrivateRoute } from '../components/PrivateRoute';
-import { LoginModel } from "../../Models/Users/LoginModel";
 import {authenticationService} from '../../sagas/api-saga';
 import jwt_decode from "jwt-decode";
 import { withRouter } from 'react-router-dom';
@@ -39,9 +38,8 @@ class Navbar extends React.Component {
 
   render() {
     const { currentUser, isAdmin, loginResponse } = this.state;
-
+    console.log(this.state);
     return (
-      // <Router history={history}>
         <div>
           {
             currentUser &&
@@ -49,7 +47,7 @@ class Navbar extends React.Component {
               <div className="navbar-nav">
                 <Link to="/" className="nav-item nav-link">Home</Link>
                 <Link to="/Articles" className="nav-item nav-link">Articles</Link>
-                <Link to="/Login" className="nav-item nav-link">Login</Link>
+                <a onClick={this.logout} >Logout</a> 
               </div>
             </nav>
           }
@@ -58,14 +56,12 @@ class Navbar extends React.Component {
               <div className="row">
                 <div className="col-md-6 offset-md-3">
                   <Route exact path="/" component={HomePage} />
-                  <PrivateRoute path="/Articles" component={Articles} />
                   <Route path="/Login" component={Login} />
                 </div>
               </div>
             </div>
           </div>
         </div>
-      // </Router>
     );
   }
 }
@@ -80,6 +76,7 @@ function mapStateToProps(state) {
         state.isAdmin = true;
       } 
     }
+
 
   return {
      loginResponse: state.loginResponse
