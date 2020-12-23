@@ -4,6 +4,7 @@ import { Route, Link } from 'react-router-dom';
 import { getData } from "../../actions/index";
 import { Articles } from './Articles/Articles';
 import { HomePage } from './HomePage/HomePage';
+import { LoginModel } from '../../Models/Users/LoginModel';
 import { loginUser } from "../../actions/users";
 import { Login } from './Login';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -29,6 +30,9 @@ class Navbar extends React.Component {
         currentUser: x,
         isAdmin: x && x.role === Role.Admin
     }));
+
+    let loginModel = new LoginModel("admin2","Password@123")
+    this.props.loginUser("http://localhost:1400/api/Users/login",loginModel);
   }
 
   logout() {
@@ -38,7 +42,7 @@ class Navbar extends React.Component {
 
   render() {
     const { currentUser, isAdmin, loginResponse } = this.state;
-    console.log(this.state);
+    console.log(this.state.currentUser);
     return (
         <div>
           {
