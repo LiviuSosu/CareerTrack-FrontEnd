@@ -4,7 +4,7 @@ import { Route, Link } from 'react-router-dom';
 import { getData } from "../../actions/index";
 import { Articles } from './Articles/Articles';
 import { HomePage } from './HomePage/HomePage';
-import { LoginModel } from '../../Models/Users/LoginModel';
+//import { LoginModel } from '../../Models/Users/LoginModel';
 import { loginUser } from "../../actions/users";
 import { Login } from './Login';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -31,8 +31,8 @@ class Navbar extends React.Component {
         isAdmin: x && x.role === Role.Admin
     }));
 
-    let loginModel = new LoginModel("admin2","Password@123")
-    this.props.loginUser("http://localhost:1400/api/Users/login",loginModel);
+    // let loginModel = new LoginModel("admin2","Password@123")
+    // this.props.loginUser("http://localhost:1400/api/Users/login",loginModel);
   }
 
   logout() {

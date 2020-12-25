@@ -3,4 +3,5 @@ export class LoginModel{
         this.Username = Username;
         this.Password = Password;
     }
+
 }
