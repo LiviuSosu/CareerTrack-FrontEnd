@@ -1,6 +1,4 @@
 import { BehaviorSubject } from 'rxjs';
-
-//import config from 'config';
 import config from '../config/config.Developlent.json';
 import { handleResponse } from '../helpers/handle-response';
 
@@ -32,7 +30,8 @@ function login(username, password) {
 }
 
 function logout() {
+    alert('aa')
     // remove user from local storage to log user out
-    localStorage.removeItem('currentUser');
-    currentUserSubject.next(null);
+    // localStorage.removeItem('currentUser');
+    // currentUserSubject.next(null);
 }

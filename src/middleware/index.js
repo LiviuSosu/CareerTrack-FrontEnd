@@ -1,5 +1,3 @@
-import { ADD_ARTICLE, FOUND_BAD_WORD } from "../constants/action-types";
-
 const forbiddenWords = ["spam", "money"];
 
 export function forbiddenWordsMiddleware({ dispatch }) {
