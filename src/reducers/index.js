@@ -1,9 +1,10 @@
-import { ADD_ARTICLE, DATA_LOADED, LOGIN_SUCCEDED } from "../constants/action-types";
+import { DATA_LOADED, LOGIN_SUCCEDED, LOGOUT_SUCCEDED } from "../constants/action-types";
 
 const initialState = {
   articles: [],
   remoteArticles: [],
-  loginResponse: {}
+  loginResponse: {},
+  logoutResponse: {}
 };
 
 function rootReducer(state = initialState, action) {
@@ -14,11 +15,17 @@ function rootReducer(state = initialState, action) {
   // }
 
 
-if (action.type === LOGIN_SUCCEDED) {
-  return Object.assign({}, state, {
-    loginResponse: action.payload
-  });
-}
+  if (action.type === LOGOUT_SUCCEDED) {
+    return Object.assign({}, state, {
+      logoutResponse: action.payload
+    });
+  }
+
+  if (action.type === LOGIN_SUCCEDED) {
+    return Object.assign({}, state, {
+      loginResponse: action.payload
+    });
+  }
 
   if (action.type === DATA_LOADED) {
     return Object.assign({}, state, {

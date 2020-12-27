@@ -1,18 +1,14 @@
 import React from 'react';
 import { connect } from "react-redux";
 import { Route, Link } from 'react-router-dom';
-import { getData } from "../../actions/index";
-import { Articles } from './Articles/Articles';
 import { HomePage } from './HomePage/HomePage';
-//import { LoginModel } from '../../Models/Users/LoginModel';
-import { loginUser } from "../../actions/users";
-import { Login } from './Login';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import Login from './Login';
 import { history, Role } from '../../helpers/index';
-import { PrivateRoute } from '../components/PrivateRoute';
 import {authenticationService} from '../../sagas/api-saga';
-import jwt_decode from "jwt-decode";
 import { withRouter } from 'react-router-dom';
+import { LogoutModel } from '../../Models/Users/LogoutModel';
+import config from '../../config/config.Developlent.json';
+import { logoutUser } from "../../actions/users";
 
 class Navbar extends React.Component {
 
@@ -21,8 +17,10 @@ class Navbar extends React.Component {
     this.state = {
       currentUser: null,
       isAdmin: false,
-      loginResponse: null
+      logoutResponse: null
     };
+
+    this.logout = this.logout.bind(this);
   }
 
   componentDidMount() {
@@ -30,37 +28,43 @@ class Navbar extends React.Component {
         currentUser: x,
         isAdmin: x && x.role === Role.Admin
     }));
-
-    // let loginModel = new LoginModel("admin2","Password@123")
-    // this.props.loginUser("http://localhost:1400/api/Users/login",loginModel);
   }
 
-  logout() {
-    authenticationService.logout();
-    history.push('/login');
+  logout(event) {
+     let logoutModel = new LogoutModel("some token");
+     this.props.logoutUser(`${config.baseUrl}Users/Logout`, logoutModel);
+     event.preventDefault();
   }
 
   render() {
-    const { currentUser, isAdmin, loginResponse } = this.state;
-    console.log(this.state.currentUser);
+    const { currentUser, logoutResponse } = this.state;
     return (
         <div>
           {
-            currentUser &&
             <nav className="navbar navbar-expand navbar-dark bg-dark">
               <div className="navbar-nav">
                 <Link to="/" className="nav-item nav-link">Home</Link>
                 <Link to="/Articles" className="nav-item nav-link">Articles</Link>
-                <a onClick={this.logout} >Logout</a> 
+                {
+                  currentUser &&
+                  <Link to="/" onClick={this.logout} className="nav-item nav-link">Logout</Link> 
+                }
+        
               </div>
             </nav>
           }
+          {/* <nav className="navbar navbar-expand navbar-dark bg-dark">
+            <div className="navbar-nav">
+              <Link to="/" className="nav-item nav-link">Home</Link>
+              <Link to="/Login"  className="nav-item nav-link">Login</Link> 
+            </div>
+          </nav> */}
           <div className="jumbotron">
             <div className="container">
               <div className="row">
                 <div className="col-md-6 offset-md-3">
                   <Route exact path="/" component={HomePage} />
-                  <Route path="/Login" component={Login} />
+                  <Route path="/Login" component={Login}/>
                 </div>
               </div>
             </div>
@@ -72,19 +76,9 @@ class Navbar extends React.Component {
 
 
 function mapStateToProps(state) {
-    var token = state.loginResponse.token;
-    if(token!==undefined)
-    {
-      var decoded = jwt_decode(token); 
-      if(decoded.roles==="Admin"){
-        state.isAdmin = true;
-      } 
-    }
-
-
   return {
-     loginResponse: state.loginResponse
+     logoutResponse: state.logoutResponse
   };
 }
 
-export default withRouter(connect(mapStateToProps, { getData, loginUser })(Navbar));
+export default withRouter(connect(mapStateToProps, {logoutUser})(Navbar));
