@@ -1,4 +1,4 @@
-import { DATA_LOADED, LOGIN_SUCCEDED, LOGOUT_SUCCEDED } from "../constants/action-types";
+import { DATA_LOADED, LOGIN_SUCCEDED, LOGOUT_FAILED, LOGOUT_SUCCEDED } from "../constants/action-types";
 
 const initialState = {
   articles: [],
@@ -14,7 +14,6 @@ function rootReducer(state = initialState, action) {
   //   });
   // }
 
-
   if (action.type === LOGOUT_SUCCEDED) {
     return Object.assign({}, state, {
       logoutResponse: action.payload
@@ -24,6 +23,12 @@ function rootReducer(state = initialState, action) {
   if (action.type === LOGIN_SUCCEDED) {
     return Object.assign({}, state, {
       loginResponse: action.payload
+    });
+  }
+
+  if (action.type === LOGOUT_FAILED) {
+    return Object.assign({}, state, {
+      loginResponse: "login failed"
     });
   }
 

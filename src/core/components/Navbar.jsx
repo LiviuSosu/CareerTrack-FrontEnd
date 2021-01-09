@@ -9,38 +9,44 @@ import { authenticationService } from '../../sagas/api-saga';
 import { withRouter } from 'react-router-dom';
 import { LogoutModel } from '../../Models/Users/LogoutModel';
 import config from '../../config/config.Developlent.json';
-import { logoutUser } from "../../actions/users";
+import { logoutUser, loginUser } from "../../actions/users";
 import { Articles } from './Articles/Articles'
 
 class Navbar extends React.Component {
+
+  loggedUser = null;
 
   constructor(props) {
     super(props);
     this.state = {
       currentUser: null,
       isAdmin: false,
-      logoutResponse: null
+      logoutResponse: null,
+      loginResponse: null
     };
 
     this.logout = this.logout.bind(this);
   }
 
   componentDidMount() {
-    authenticationService.currentUser.subscribe(x => this.setState({
-      currentUser: x,
-      isAdmin: x && x.role === Role.Admin
-    }));
+    // authenticationService.currentUser.subscribe(x => this.setState({
+    //   currentUser: x,
+    //   isAdmin: x && x.role === Role.Admin
+    // }));
   }
 
   logout(event) {
     let logoutModel = new LogoutModel("some token");
     this.props.logoutUser(`${config.baseUrl}Users/Logout`, logoutModel);
+    this.loggedUser = null;
     window.location.reload();
     event.preventDefault();
   }
 
   render() {
-    const { currentUser, logoutResponse } = this.state;
+    const { currentUser, logoutResponse, loginResponse } = this.state;
+    this.loggedUser = JSON.parse(localStorage.getItem('currentUser'));
+    console.log(this.loggedUser);
     return (
       <div>
         {
@@ -48,14 +54,14 @@ class Navbar extends React.Component {
             <div className="navbar-nav">
               <Link to="/" className="nav-item nav-link">Home</Link>
               {
-                currentUser &&
+                this.loggedUser &&
                 <Link to="/Articles" className="nav-item nav-link">Articles</Link>
               }
               {
-                currentUser &&
+                this.loggedUser &&
                 <Link to="/" onClick={this.logout} className="nav-item nav-link">Logout</Link>
               }
-              {(currentUser == null) &&
+              {(this.loggedUser == null) &&
                 <Link to="/Login" className="nav-item nav-link">Login</Link>
               }
             </div>
@@ -86,7 +92,8 @@ class Navbar extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    logoutResponse: state.logoutResponse
+    logoutResponse: state.logoutResponse,
+    loginResponse: state.loginResponse
   };
 }
 

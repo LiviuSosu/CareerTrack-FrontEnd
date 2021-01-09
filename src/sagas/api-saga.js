@@ -3,6 +3,7 @@ import * as constants from '../constants/action-types'
 import { BehaviorSubject } from 'rxjs';
 import * as helpers from '../helpers';
 
+import { history, Role } from '../helpers/index';
 export default function* watcherSaga() {
   yield takeEvery(constants.DATA_REQUESTED, workerSaga);
   yield takeEvery(constants.LOGIN_REQUESTED, userLoginSaga);
@@ -60,9 +61,16 @@ function userLogin(url, LoginModel) {
         // store user details and jwt token in local storage to keep user logged in between page refreshes
         localStorage.setItem('currentUser', JSON.stringify(user));
         currentUserSubject.next(user);
-
+     //   history.push("/")
+        //console.log("success")
         return user;
-      });
+      }).catch(
+        user => {
+          localStorage.removeItem('currentUser');
+          currentUserSubject.next(null);
+          //console.log("failed")
+          return "failed"
+        })
 }
 
 function userLogout(url, LogoutModel) {
