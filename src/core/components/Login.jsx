@@ -7,6 +7,7 @@ import { history, Role } from '../../helpers/index';
 import { authenticationService } from '../../sagas/api-saga';
 import config from '../../config/config.Developlent.json';
 
+
 class Login extends React.Component {
 
   constructor(props) {
@@ -19,10 +20,10 @@ class Login extends React.Component {
   }
 
   componentDidMount() {
-    authenticationService.currentUser.subscribe(x => this.setState({
-      currentUser: x,
-      isAdmin: x && x.role === Role.Admin
-    }));
+    // authenticationService.currentUser.subscribe(x => this.setState({
+    //   currentUser: x,
+    //   isAdmin: x && x.role === Role.Admin
+    // }));
   }
 
   handleUsernameChange(event) {
@@ -34,14 +35,13 @@ class Login extends React.Component {
   }
 
   handleSubmit(event) {
-    //let loginModel = new LoginModel(this.state.username,this.state.password)
-    let loginModel = new LoginModel("admin2", "Password@123") //TODO: delete this line and uncomment the line above 
+    let loginModel = new LoginModel(this.state.username,this.state.password)
+    //let loginModel = new LoginModel("admin2", "Password@123") //TODO: delete this line and uncomment the line above 
     this.props.loginUser(`${config.baseUrl}Users/login`, loginModel);
     event.preventDefault();
   }
 
   render() {
-    console.log(this.state.currentUser);
     return (
       <form onSubmit={this.handleSubmit}>
         <div className ="form-group">
@@ -60,6 +60,11 @@ class Login extends React.Component {
 }
 
 function mapStateToProps(state) {
+  if(state.loginResponse.token!=null)
+  {
+     history.push("/");
+     window.location.reload();
+  }
   var token = state.loginResponse.token;
   if (token !== undefined) {
     var decoded = jwt_decode(token);
@@ -72,4 +77,6 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, { loginUser })(Login);
+const mapDispatchToProps = { loginUser }
+
+ export default connect(mapStateToProps, mapDispatchToProps)(Login);
