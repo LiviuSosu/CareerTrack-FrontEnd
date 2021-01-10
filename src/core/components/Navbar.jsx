@@ -46,7 +46,7 @@ class Navbar extends React.Component {
   render() {
     const { currentUser, logoutResponse, loginResponse } = this.state;
     this.loggedUser = JSON.parse(localStorage.getItem('currentUser'));
-    console.log(this.loggedUser);
+    //https://jasonwatmore.com/post/2017/09/16/react-redux-user-registration-and-login-tutorial-example
     return (
       <div>
         {
