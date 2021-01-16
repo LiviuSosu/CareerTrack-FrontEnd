@@ -4,89 +4,86 @@ import jwt_decode from "jwt-decode";
 import { connect } from "react-redux";
 import { loginUser, hideErrorMessage } from "../../actions/users";
 import { history, Role } from '../../helpers/index';
-import { authenticationService } from '../../sagas/api-saga';
-import config from '../../config/config.Developlent.json';
+// import config from '../../config/config.Developlent.json';
+
+import { userActions } from '../../actions';
 
 class Login extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = { username: '', password: '', currentUser: null, isAdmin: false};
+    this.state = { username: '', password: '', submitted: false, currentUser: null, isAdmin: false };
 
-    this.handleUsernameChange = this.handleUsernameChange.bind(this);
-    this.handlePasswordChange = this.handlePasswordChange.bind(this);
+    this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-
-    this.showProduct = this.showProduct.bind(this);
   }
 
-  componentDidMount() {
-    // authenticationService.currentUser.subscribe(x => this.setState({
-    //   currentUser: x,
-    //   isAdmin: x && x.role === Role.Admin
-    // }));
+  handleChange(e){
+    const {name, value} = e.target;
+    this.setState({[name]: value});
   }
 
-  handleUsernameChange(event) {
-    this.setState({ username: event.target.value });
-  }
+  handleSubmit(e) {
+    e.preventDefault();
 
-  handlePasswordChange(event) {
-    this.setState({ password: event.target.value });
-  }
-
-  showProduct() {
-    this.props.hideErrorMessage();
-  };
-
-  handleSubmit(event) {
-    let loginModel = new LoginModel(this.state.username, this.state.password)
-    //let loginModel = new LoginModel("admin2", "Password@123") //TODO: delete this line and uncomment the line above 
-    this.props.loginUser(`${config.baseUrl}Users/login`, loginModel);
-    alert(localStorage.getItem('currentUser'));
-    event.preventDefault();
-  }
-
-  render() {
-    // console.log(this.state)
-    return (
-      <form onSubmit={this.handleSubmit}>
-        <div className="form-group">
-          <label htmlFor="username">Username</label>
-          <input type="text" className="form-control" id="username" value={this.state.username} onChange={this.handleUsernameChange} />
-        </div>
-        <div className="form-group">
-          <label htmlFor="password">Password</label>
-          <input type="password" className="form-control" id="password" value={this.state.password} onChange={this.handlePasswordChange} />
-          <p className="text-danger" >.text-danger</p>
-        </div>
-        <button type="submit" className="btn btn-primary">Log in</button>
-      </form>
-
-    );
-  }
-}
-
-function mapStateToProps(myState) {
-  if (myState.loginResponse.token != null) {
-    history.push("/");
-    window.location.reload();
-  }
-  else {
- //   this.props.hideErrorMessage();
-  }
-  var token = myState.loginResponse.token;
-  if (token !== undefined) {
-    var decoded = jwt_decode(token);
-    if (decoded.roles === "Admin") {
-      myState.isAdmin = true;
+    this.setState({ submitted: true });
+    const { username, password } = this.state;
+    if (username && password) {
+        this.props.login(username, password);
     }
-  }
-  return {
-    loginResponse: myState.loginResponse
-  };
 }
 
-const mapDispatchToProps = { loginUser }
+render() {
+  const { loggingIn } = this.props;
+  const { username, password, submitted } = this.state;
 
-export default connect(mapStateToProps, mapDispatchToProps)(Login);
+  return(
+    <div className="col-md-6 col-md-offset-3">
+          <h2>Login</h2>
+          <form name="form" onSubmit={this.handleSubmit}>
+            <div className={'form-group' + (submitted && !username ? ' has-error': '')}>
+              <label htmlFor="username">Username</label>
+              <input type="text" className="form-control" name="username" value={username} onChange={this.handleChange} />
+              {
+                submitted && !username && 
+                <div className="help-block">Username is required</div>
+              }
+            </div>
+
+            <div className={'form-group' + (submitted && !password) ? ' has-error':''}>
+              <input type="password" className="form-control" name="password" value={password} onChange={this.handleChange} />
+              {
+                submitted && !password &&
+                <div className="help-block">Password is required</div>
+              }
+            </div>
+            <div className="form-group">
+              <button className="btn btn-primary">Login</button>
+              {
+                loggingIn &&
+                  <div>loading ... y</div>
+              }
+            </div>
+          </form>
+    </div>
+  )
+}
+}
+
+function mapState(state) {
+  const { loggingIn } = state.authentication;
+  return { loggingIn };
+}
+
+const actionCreators = {
+  login: userActions.login,
+  //logout: userActions.logout
+};
+
+//export default connect(mapState, actionCreators)(Login);
+
+const connectedLoginPage = connect(mapState, actionCreators)(Login);
+export { connectedLoginPage as Login };
+
+// const connectedLoginPage = connect(mapState, actionCreators)(LoginPage);
+// export { connectedLoginPage as LoginPage };

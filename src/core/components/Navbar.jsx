@@ -2,13 +2,13 @@ import React from 'react';
 import { connect } from "react-redux";
 import { Route, Link } from 'react-router-dom';
 import { HomePage } from './HomePage/HomePage';
-import Login from './Login';
+import { Login } from './Login';
 import { PrivateRoute } from './PrivateRoute';
 import { history, Role } from '../../helpers/index';
 import { authenticationService } from '../../sagas/api-saga';
 import { withRouter } from 'react-router-dom';
 import { LogoutModel } from '../../Models/Users/LogoutModel';
-import config from '../../config/config.Developlent.json';
+// import config from '../../config/config.Developlent.json';
 import { logoutUser, loginUser } from "../../actions/users";
 import { Articles } from './Articles/Articles'
 
@@ -37,7 +37,7 @@ class Navbar extends React.Component {
 
   logout(event) {
     let logoutModel = new LogoutModel("some token");
-    this.props.logoutUser(`${config.baseUrl}Users/Logout`, logoutModel);
+   // this.props.logoutUser(`${config.baseUrl}Users/Logout`, logoutModel);
     this.loggedUser = null;
     window.location.reload();
     event.preventDefault();
