@@ -37,6 +37,7 @@ render() {
   const { loggingIn } = this.props;
   const { username, password, submitted } = this.state;
 
+  console.log(this.loggingIn)
   return(
     <div className="col-md-6 col-md-offset-3">
           <h2>Login</h2>
