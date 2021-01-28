@@ -1,27 +1,39 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
+import { userActions } from '../../../actions/user';
+
 class Login extends React.Component {
     constructor(props) {
         super(props);
+
+        this.state = {
+            username: '',
+            password: '',
+            submitted: false
+        };
+
+        this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     handleSubmit(e) {
         e.preventDefault();
-        console.log("sublitetd")
-        // this.setState({ submitted: true });
-        // const { username, password } = this.state;
-        // if (username && password) {
-        //     this.props.login(username, password);
+        this.setState({ submitted: true });
+        const { username, password } = this.state;
+        this.props.login("admin2", "Password@123");
+        // if(username && password){
+        //     this.props.login(username, password)
         // }
     }
 
     render() {
         const { loggingIn } = this.props;
+        const { submitted } = this.state;
         return (
             <div className="col-md-6 col-md-offset-3">
                  <h2>Login</h2>
                  <form name="form" onSubmit={this.handleSubmit}>
+
                  <div className="form-group">
                         <button className="btn btn-primary">Login</button>
                         {loggingIn &&
@@ -40,6 +52,7 @@ function mapState(state) {
 }
 
 const actionCreators = {
+    login: userActions.login
 };
 
 const connectedLogin = connect(mapState, actionCreators)(Login);
