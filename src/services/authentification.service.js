@@ -17,17 +17,16 @@ function login(username, password) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password })
     };
-     return fetch(`http://localhost:1400/api/Users/login`, requestOptions)
-        .then(handleResponse)
-        .then(user => {
-            console.log("jackman")
-            // store user details and jwt token in local storage to keep user logged in between page refreshes
-            localStorage.setItem('currentUser', JSON.stringify(user));
-            currentUserSubject.next(user);
-            return user;
-        }).catch(err=>{
-            console.log(err)
-        });
+    return fetch(`http://localhost:1400/api/Users/login`, requestOptions)
+    .then(handleResponse)
+    .then(user => {
+        // store user details and jwt token in local storage to keep user logged in between page refreshes
+        localStorage.setItem('currentUser', JSON.stringify(user));
+        currentUserSubject.next(user);
+        return user;
+    }).catch(err=>{
+        console.log(err)
+    });
 }
 
 function logout() {
