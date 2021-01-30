@@ -15,10 +15,12 @@ function login(username, password) {
             .then(
                 user => { 
                     dispatch(success(user));
-                    history.push('/');
-                    window.location.reload(false);
+                   // history.push('/');
+                  //  window.location.reload();
+                  console.log(user)
                 },
                 error => {
+
                     dispatch(failure(error.toString()));
                     dispatch(alertActions.error(error.toString()));
                 }
