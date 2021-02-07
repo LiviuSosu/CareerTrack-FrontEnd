@@ -14,17 +14,23 @@ function login(username, password) {
         userService.login(username, password)
             .then(
                 user => { 
+                  if(user=='Unauthorized'){
+                    dispatch(failure('Unauthorized'));
+                    dispatch(alertActions.error('Unauthorized'));
+                  }
+                  else
+                  {
+                    history.push('/');
+                    window.location.reload();
                     dispatch(success(user));
-                   // history.push('/');
-                  //  window.location.reload();
+                  }
                   console.log(user)
                 },
                 error => {
-
                     dispatch(failure(error.toString()));
                     dispatch(alertActions.error(error.toString()));
                 }
-            );
+            )
     };
 
     function request(user) { return { type: userConstants.LOGIN_REQUEST, user } }
