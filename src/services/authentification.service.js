@@ -25,7 +25,8 @@ function login(username, password) {
         currentUserSubject.next(user);
         return user;
     }).catch(err=>{
-        console.log(err)
+        console.log(err);
+        return err;
     });
 }
 
