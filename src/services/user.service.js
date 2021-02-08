@@ -20,11 +20,12 @@ function login(username, password) {
             localStorage.setItem('user', JSON.stringify(user));
             return user;
         }).catch(err=>{
-           // console.log('aici')
            console.log(err);
            return err;
         });
 }
+
+
 
 function handleResponse(response) {
     return response.text().then(text => {

@@ -4,8 +4,10 @@ import { Route, Switch, Redirect,Link, withRouter } from 'react-router-dom';
 
 import { history } from '../../../helpers/history';
 import { alertActions } from '../../../actions/alert';
+import { PrivateRoute } from '../../components/PrivateRoute';
 import { Login } from '../../components/Login/Login';
 import { Home } from '../../components/HomePage/Home';
+import { Articles } from '../../components/Articles/Articles';
 
 class App extends React.Component {
     constructor(props) {
@@ -20,6 +22,7 @@ class App extends React.Component {
 
 //https://stackoverflow.com/questions/54843302/reactjs-bootstrap-navbar-and-routing-not-working-together
     render() {
+        console.log(JSON.parse(localStorage.getItem('user')));
         const { alert } = this.props;
         return (
             <div>
@@ -27,16 +30,18 @@ class App extends React.Component {
                     <div className="navbar-nav">
                         <Link to="/Home" className="nav-item nav-link">Home</Link>
                         <Link to="/Login" className="nav-item nav-link">Login</Link>
+                        <Link to="/Articles" className="nav-item nav-link">Articles</Link>
                     </div>
                 </nav>
                 <div className="jumbotron">
                     <div className="container">
                         <div className="col-sm-8 col-sm-offset-2">
                         {alert.message &&
-                            <p>{alert.message}</p>
+                            <div className={`alert ${alert.type}`}>{alert.message}</div>
                         }
                             <Route path="/Login" component={Login} />
                             <Route path="/Home" component={Home} />
+                            {/* <PrivateRoute path="/Articles" component={Articles} /> */}
                         </div>
                     </div>
                 </div>
