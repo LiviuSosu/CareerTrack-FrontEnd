@@ -1,10 +1,24 @@
-import React, { Component } from 'react';
+import React from 'react';
+import { connect } from 'react-redux';
 
-export class Articles extends Component {
+class Articles extends React.Component {
+    constructor(props) {
+        super(props);
+    }
 
     render() {
-        return (<div>
-            <p>this is the ARTICLES page</p>
-        </div>);
+        return (
+            <p>some Articles page</p>
+        );
     }
 }
+
+function mapState(state) {
+    return {  };
+}
+
+const actionCreators = {
+};
+
+const connectedLogin = connect(mapState, actionCreators)(Articles);
+export { connectedLogin as Articles };
