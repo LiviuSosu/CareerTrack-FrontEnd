@@ -19,9 +19,9 @@ function login(username, password) {
             // store user details and jwt token in local storage to keep user logged in between page refreshes
             localStorage.setItem('user', JSON.stringify(user));
             return user;
-        }).catch(err=>{
-           console.log(err);
-           return err;
+        }).catch(err => {
+            console.log(err);
+            return err;
         });
 }
 
@@ -33,7 +33,7 @@ function handleResponse(response) {
         if (!response.ok) {
             if (response.status === 401) {
                 // auto logout if 401 response returned from api
-               //TODO: logout();
+                //TODO: logout();
                 //location.reload(true);
             }
 
