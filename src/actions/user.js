@@ -4,7 +4,8 @@ import { history } from '../helpers';
 import { alertActions } from './';
 
 export const userActions = {
-    login
+    login,
+    logout
 };
 
 function login(username, password) {
@@ -36,4 +37,8 @@ function login(username, password) {
     function request(user) { return { type: userConstants.LOGIN_REQUEST, user } }
     function success(user) { return { type: userConstants.LOGIN_SUCCESS, user } }
     function failure(error) { return { type: userConstants.LOGIN_FAILURE, error } }
+}
+
+function logout(token){
+
 }

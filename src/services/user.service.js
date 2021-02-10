@@ -3,7 +3,8 @@ import config from '../config/config.Developlent.json'
 import { authHeader } from '../helpers';
 
 export const userService = {
-    login
+    login,
+    logout
 };
 
 function login(username, password) {
@@ -25,7 +26,26 @@ function login(username, password) {
         });
 }
 
+function logout(token) {
+    const requestOptions = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': token
+        },
+    };
 
+    return fetch(`http://localhost:1400/api/Users/Logout`, requestOptions)
+        .then(handleResponse)
+        .then(user => {
+            localStorage.removeItem('currentUser');
+            console.log(user);
+            return user;
+        }).catch(err => {
+            console.log(err);
+            return err;
+        });
+}
 
 function handleResponse(response) {
     return response.text().then(text => {
