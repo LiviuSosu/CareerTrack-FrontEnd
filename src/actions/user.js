@@ -39,6 +39,24 @@ function login(username, password) {
     function failure(error) { return { type: userConstants.LOGIN_FAILURE, error } }
 }
 
-function logout(token){
+function logout(token) {
+  return dispatch => {
+    dispatch(request({ token }));
 
+    userService.logout(token)
+      .then(response => {
+        console.log(response);
+        dispatch(success(response));
+      },
+        error => {
+          console.log(error);
+          dispatch(failure(error));
+        }
+      )
+
+  }
+
+  function request(response) { return {  type: userConstants.LOGOUT_REQUESTED, response} }
+  function success(response) { return { type: userConstants.LOGOUT_SUCCEDED, response } }
+  function failure(error) { return { type: userConstants.LOGOUT_FAILURE, error } }
 }
