@@ -4,6 +4,7 @@ import { Route, Switch, Redirect,Link, withRouter } from 'react-router-dom';
 
 import { history } from '../../../helpers/history';
 import { alertActions } from '../../../actions/alert';
+import { userActions } from '../../../actions/user';
 import { PrivateRoute } from '../../components/PrivateRoute';
 import { Login } from '../../components/Login/Login';
 import { Home } from '../../components/HomePage/Home';
@@ -18,7 +19,13 @@ class App extends React.Component {
             //make sure to remove location and action if they are not necesary
            this.props.clearAlerts();
         });
+
+        this.logout =  this.logout.bind(this);
     }
+
+logout(){
+    this.props.logout('Bearer aaa.vvvvv.ssss')
+}
 
 //https://stackoverflow.com/questions/54843302/reactjs-bootstrap-navbar-and-routing-not-working-together
     render() {
@@ -31,6 +38,7 @@ class App extends React.Component {
                         <Link to="/Home" className="nav-item nav-link">Home</Link>
                         <Link to="/Login" className="nav-item nav-link">Login</Link>
                         <Link to="/Articles" className="nav-item nav-link">Articles</Link>
+                        <a onClick={this.logout} className="nav-item nav-link">Logout</a>
                     </div>
                 </nav>
                 <div className="jumbotron">
@@ -56,7 +64,8 @@ function mapState(state) {
 }
 
 const actionCreators = {
-    clearAlerts: alertActions.clear
+    clearAlerts: alertActions.clear,
+    logout: userActions.logout
 };
 
 const connectedApp = connect(mapState, actionCreators)(App);

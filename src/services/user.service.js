@@ -39,9 +39,11 @@ function logout(token) {
         .then(handleResponse)
         .then(user => {
             localStorage.removeItem('currentUser');
+            console.log('hatz geonutzule!');
             console.log(user);
             return user;
         }).catch(err => {
+            console.log('naspa...');
             console.log(err);
             return err;
         });
