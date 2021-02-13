@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Route, Switch, Redirect,Link, withRouter } from 'react-router-dom';
+import { Route,Link } from 'react-router-dom';
 
 import { history } from '../../../helpers/history';
 import { alertActions } from '../../../actions/alert';

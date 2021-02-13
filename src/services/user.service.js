@@ -1,10 +1,10 @@
 //import config from 'config';
 import config from '../config/config.Developlent.json'
-import { authHeader } from '../helpers';
 
 export const userService = {
     login,
-    logout
+    logout,
+    getLoggedUser
 };
 
 function login(username, password) {
@@ -38,7 +38,7 @@ function logout(token) {
     return fetch(`http://localhost:1400/api/Users/Logout`, requestOptions)
         .then(handleResponse)
         .then(user => {
-            localStorage.removeItem('currentUser');
+            localStorage.removeItem('user');
             console.log('hatz geonutzule!');
             console.log(user);
             return user;
@@ -47,6 +47,12 @@ function logout(token) {
             console.log(err);
             return err;
         });
+}
+
+function getLoggedUser(){
+    var user = localStorage.getItem('user');
+    console.log(user);
+    return user;
 }
 
 function handleResponse(response) {
