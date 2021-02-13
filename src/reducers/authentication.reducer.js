@@ -19,6 +19,11 @@ export function authentication(state = initialState, action) {
       return {};
     case userConstants.LOGOUT:
       return {};
+
+
+    case userConstants.GET_LOGGED_USER:
+      return {};
+      
     default:
       return state
   }
