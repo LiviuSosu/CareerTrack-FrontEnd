@@ -51,7 +51,6 @@ function logout(token) {
 
 function getLoggedUser(){
     var user = localStorage.getItem('user');
-    console.log(user);
     return user;
 }
 

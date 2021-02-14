@@ -21,7 +21,8 @@ export function authentication(state = initialState, action) {
       return {};
 
 
-    case userConstants.GET_LOGGED_USER:
+    case userConstants.GET_LOGGED_USER_REQUEST:
+      //console.log(user)
       return {};
       
     default:
