@@ -21,6 +21,9 @@ class App extends React.Component {
         });
 
         this.logout =  this.logout.bind(this);
+
+        var currentUser = this.props.getLoggedUser();
+        console.log(currentUser);
     }
 
 logout(){
@@ -29,15 +32,15 @@ logout(){
 
 //https://stackoverflow.com/questions/54843302/reactjs-bootstrap-navbar-and-routing-not-working-together
     render() {
-        console.log(JSON.parse(localStorage.getItem('user')));
-        const { alert } = this.props;
+        const { alert, authentication } = this.props;
+        console.log(authentication.user)
         return (
             <div>
                 <nav className="navbar navbar-expand navbar-dark bg-dark">
                     <div className="navbar-nav">
                         <Link to="/Home" className="nav-item nav-link">Home</Link>
                         <Link to="/Login" className="nav-item nav-link">Login</Link>
-                        <Link to="/Articles" className="nav-item nav-link">Articles</Link>
+                        {authentication.user && <Link to="/Articles" className="nav-item nav-link">Articles</Link>}
                         <a onClick={this.logout} className="nav-item nav-link">Logout</a>
                     </div>
                 </nav>
@@ -49,7 +52,7 @@ logout(){
                         }
                             <Route path="/Login" component={Login} />
                             <Route path="/Home" component={Home} />
-                            {/* <PrivateRoute path="/Articles" component={Articles} /> */}
+                            <PrivateRoute path="/Articles" component={Articles} />
                         </div>
                     </div>
                 </div>
@@ -59,13 +62,15 @@ logout(){
 }
 
 function mapState(state) {
-    const { alert } = state;
-    return { alert };
+    console.log(state)
+    const { alert, authentication } = state;
+    return { alert, authentication };
 }
 
 const actionCreators = {
     clearAlerts: alertActions.clear,
-    logout: userActions.logout
+    logout: userActions.logout,
+    getLoggedUser: userActions.getLoggedUser
 };
 
 const connectedApp = connect(mapState, actionCreators)(App);

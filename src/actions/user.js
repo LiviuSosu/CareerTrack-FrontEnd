@@ -5,7 +5,8 @@ import { alertActions } from './';
 
 export const userActions = {
     login,
-    logout
+    logout,
+    getLoggedUser
 };
 
 function login(username, password) {
@@ -59,4 +60,19 @@ function logout(token) {
   function request(response) { return {  type: userConstants.LOGOUT_REQUESTED, response} }
   function success(response) { return { type: userConstants.LOGOUT_SUCCEDED, response } }
   function failure(error) { return { type: userConstants.LOGOUT_FAILURE, error } }
+}
+
+function getLoggedUser(){
+  // return dispatch=>{
+  //   dispatch(request({}));
+  //   var y = userService.getLoggedUser();
+  //   console.log(y);
+  //   //if(y)....
+
+  //   dispatch(success(y));
+  // }
+  return dispatch=>(userService.getLoggedUser());
+
+  function request(response){return { type: userConstants.GET_LOGGED_USER_REQUEST, response } }
+  function success(response) {return {type:userConstants.GET_LOGGED_USER_SUCCESS, response}}
 }
