@@ -33,14 +33,14 @@ logout(){
 //https://stackoverflow.com/questions/54843302/reactjs-bootstrap-navbar-and-routing-not-working-together
     render() {
         const { alert, authentication } = this.props;
-        console.log(authentication.user)
+        console.log(authentication.loggedUser)
         return (
             <div>
                 <nav className="navbar navbar-expand navbar-dark bg-dark">
                     <div className="navbar-nav">
                         <Link to="/Home" className="nav-item nav-link">Home</Link>
                         <Link to="/Login" className="nav-item nav-link">Login</Link>
-                        {authentication.user && <Link to="/Articles" className="nav-item nav-link">Articles</Link>}
+                        {authentication.loggedUser && <Link to="/Articles" className="nav-item nav-link">Articles</Link>}
                         <a onClick={this.logout} className="nav-item nav-link">Logout</a>
                     </div>
                 </nav>
