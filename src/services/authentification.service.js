@@ -1,5 +1,4 @@
 import { BehaviorSubject } from 'rxjs';
-import config from '../config/config.Developlent.json';
 import { handleResponse } from '../helpers/handle-response';
 
 const currentUserSubject = new BehaviorSubject(JSON.parse(localStorage.getItem('user'))); //maybe later set to current USer

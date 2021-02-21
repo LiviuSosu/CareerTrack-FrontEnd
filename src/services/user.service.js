@@ -1,5 +1,4 @@
-//import config from 'config';
-import config from '../config/config.Developlent.json'
+
 
 export const userService = {
     login,
